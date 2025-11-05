@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameOn News - Latest Sports Updates</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        :root {
+            --primary: #ff3a00;
+            --secondary: #0a1128;
+            --accent: #00e5ff;
+            --light: #ffffff;
+            --dark: #0d1117;
+            --gradient: linear-gradient(135deg, #ff3a00 0%, #00e5ff 100%);
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 58, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.1) 0%, transparent 20%);
+        }
+
+        /* Particle Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(13, 17, 23, 0.9);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid transparent;
+            background-image: linear-gradient(90deg, var(--dark), var(--secondary)), 
+                              var(--gradient);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            transition: all 0.4s ease;
+        }
+
+        header.scrolled {
+            padding: 0.5rem 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            animation: textGlow 2s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 58, 0, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(0, 229, 255, 0.8), 0 0 30px rgba(0, 229, 255, 0.6);
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 1.2rem;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-image: var(--gradient);
+            transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-image: var(--gradient);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-login:hover {
+            color: var(--dark);
+            border-color: transparent;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 194, 255, 0.4);
+        }
+
+        .btn-signup {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-signup:hover {
+            color: var(--dark);
+            border-color: transparent;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 58, 0, 0.4);
+        }
+
+        /* News Hero Section */
+        .news-hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 10% 4rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .news-hero-content {
+            width: 100%;
+            z-index: 1;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .news-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .news-hero h1 span {
+            display: block;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            position: relative;
+        }
+
+        .news-hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        /* News Grid Section */
+        .news-container {
+            padding: 2rem 10% 5rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding-left: 2rem;
+            border-left: 5px solid;
+            border-image: var(--gradient) 1;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .news-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .news-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(255, 58, 0, 0.3);
+        }
+
+        .news-card-img {
+            height: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .news-card:hover .news-card-img img {
+            transform: scale(1.1);
+        }
+
+        .news-card-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-image: var(--gradient);
+            color: var(--dark);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .news-card-content {
+            padding: 2rem;
+        }
+
+        .news-card-date {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .news-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .news-card p {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .news-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
+        }
+
+        .news-card-author {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-image: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-weight: 700;
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .read-more {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 1rem;
+            color: var(--accent);
+        }
+
+        /* Featured News */
+        .featured-news {
+            padding: 2rem 10%;
+            margin-bottom: 3rem;
+        }
+
+        .featured-news-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+        }
+
+        .featured-news-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .featured-news-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .featured-news-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(255, 58, 0, 0.3);
+        }
+
+        .featured-news-img {
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-news-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .featured-news-card:hover .featured-news-img img {
+            transform: scale(1.1);
+        }
+
+        .featured-news-content {
+            padding: 2.5rem;
+        }
+
+        .featured-news-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-weight: 800;
+            line-height: 1.4;
+        }
+
+        /* News Ticker */
+        .news-ticker {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.2rem 2rem;
+            border-radius: 15px;
+            margin: 3rem 10%;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .ticker-label {
+            background-image: var(--gradient);
+            color: var(--dark);
+            padding: 0.5rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .ticker-content {
+            position: relative;
+            overflow: hidden;
+            height: 25px;
+            flex-grow: 1;
+        }
+
+        .ticker-item {
+            position: absolute;
+            white-space: nowrap;
+            font-weight: 600;
+            color: var(--accent);
+            animation: tickerAnimation 20s linear infinite;
+        }
+
+        @keyframes tickerAnimation {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(255, 58, 0, 0.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-25px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .news-hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .featured-news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .news-hero {
+                padding: 7rem 5% 3rem;
+            }
+            
+            .news-hero h1 {
+                font-size: 3rem;
+            }
+            
+            .news-container, .featured-news {
+                padding: 2rem 5% 4rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+
+            .news-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .news-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .news-ticker {
+                flex-direction: column;
+                gap: 1rem;
+                margin: 2rem 5%;
+            }
+            
+            .auth-buttons {
+                display: none;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <span class="logo-text">GameOn</span>
+            </div>
+            <ul class="nav-links">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="live.html" class="nav-link active">Live Scores</a></li>
+                    <li class="nav-item"><a href="news.html" class="nav-link">News</a></li>
+                    <li class="nav-item"><a href="fixtures.html" class="nav-link">Fixtures</a></li>
+                    <li class="nav-item"><a href="team.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link">Shop</a></li>
+                    <li class="nav-item"><a href="https://gameon1.infy.uk" class="nav-link">Contact</a></li>
+                
+            </ul>
+            <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+            <div class="auth-buttons">
+                <button class="btn btn-login">Login</button>
+                <button class="btn btn-signup">Sign Up</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- News Hero Section -->
+    <section class="news-hero">
+        <div class="news-hero-content">
+            <h1>Latest Sports <span>News & Updates</span></h1>
+            <p>Stay updated with the latest happenings in the world of sports. From transfer news to match analysis, we've got you covered.</p>
+        </div>
+    </section>
+
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <div class="ticker-label">Breaking News</div>
+        <div class="ticker-content">
+            <div class="ticker-item">⚽ Messi scores incredible free kick in his debut match for Inter Miami • 🏀 Warriors trade Jordan Poole for Chris Paul • 🎾 Djokovic wins Wimbledon for his 24th Grand Slam title • 🏈 Patrick Mahomes signs record-breaking contract extension with Chiefs</div>
+        </div>
+    </div>
+
+    <!-- Featured News Section -->
+    <section class="featured-news">
+        <h2 class="section-title">Featured Stories</h2>
+        <div class="featured-news-grid">
+            <div class="featured-news-card">
+                <div class="featured-news-img">
+                    <img src="messi.jpg" alt="Football News">
+                </div>
+                <div class="featured-news-content">
+                    <span class="news-card-date">Feburary 02, 2026</span>
+                    <h3>Messi's Magical Debut: Inter Miami Stuns Opponents with Spectacular Performance</h3>
+                    <p>Lionel Messi made an unforgettable debut for Inter Miami, scoring two goals including a stunning free kick in the final minutes of the game.</p>
+                    <div class="news-card-footer">
+                        <div class="news-card-author">
+                            <div class="author-avatar">JS</div>
+                            <span class="author-name">John Smith</span>
+                        </div>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="featured-news-card">
+                <div class="featured-news-img">
+                    <img src="basketball2.jpg" alt="Basketball News">
+                </div>
+                <div class="featured-news-content">
+                    <span class="news-card-date">November 28, 2025</span>
+                    <h3>NBA Shocker: Warriors Trade Jordan Poole in Blockbuster Deal for Chris Paul</h3>
+                    <p>In a move that has stunned the basketball world, the Golden State Warriors have traded young star Jordan Poole for veteran point guard Chris Paul.</p>
+                    <div class="news-card-footer">
+                        <div class="news-card-author">
+                            <div class="author-avatar">MD</div>
+                            <span class="author-name">Mike Johnson</span>
+                        </div>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Grid Section -->
+    <section class="news-container">
+        <h2 class="section-title">Latest News</h2>
+        <div class="news-grid">
+            <!-- News Card 1 -->
+            <div class="news-card">
+                <div class="news-card-img">
+                    <img src="manchester city.jpg" alt="Football News">
+                    <div class="news-card-badge">Football</div>
+                </div>
+                <div class="news-card-content">
+                    <span class="news-card-date">January 05, 2026</span>
+                    <h3>Haaland Breaks Premier League Goal Record in Manchester City's Dominant Victory</h3>
+                    <p>Erling Haaland scored a hat-trick as Manchester City crushed their opponents 5-0, with the Norwegian breaking the single-season scoring record.</p>
+                    <div class="news-card-footer">
+                        <div class="news-card-author">
+                            <div class="author-avatar">AS</div>
+                            <span class="author-name">Alex Morgan</span>
+                        </div>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- News Card 2 -->
+            <div class="news-card">
+                <div class="news-card-img">
+                    <img src="basketball.jpg" alt="Basketball News">
+                    <div class="news-card-badge">Basketball</div>
+                </div>
+                <div class="news-card-content">
+                    <span class="news-card-date">July 14, 2023</span>
+                    <h3>Victor Wembanyama Shines in Summer League Debut Despite Spurs Loss</h3>
+                    <p>The No. 1 overall pick showcased his unique skillset with an impressive all-around performance in his first Summer League game.</p>
+                    <div class="news-card-footer">
+                        <div class="news-card-author">
+                            <div class="author-avatar">SR</div>
+                            <span class="author-name">Sarah Johnson</span>
+                        </div>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- News Card 3 -->
+            <div class="news-card">
+                <div class="news-card-img">
+                    <img src="dejokovic.jpg" alt="Tennis News">
+                    <div class="news-card-badge">Tennis</div>
+                </div>
+                <div class="news-card-content">
+                    <span class="news-card-date">November 25, 2025</span>
+                    <h3>Djokovic Claims Record 24th Grand Slam Title with Epic Wimbledon Victory</h3>
+                    <p>Novak Djokovic cemented his status as one of the greatest tennis players of all time with a hard-fought victory over Carlos Alcaraz.</p>
+                    <div class="news-card-footer">
+                        <div class="news-card-author">
+                            <div class="author-avatar">TW</div>
+                            <span class="author-name">Tom Wilson</span>
+                        </div>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- News Card 4 -->
+            <div class="news-card">
+                <div class="news-card-img">
+                    <img src="cricket.jpg" alt="Cricket News">
+                    <div class="news-card-badge">Cricket</div>
+                </div>
+                <div class="news-card-content">
+                    <span class="news-card-date">October 16, 2025</span>
+                    <h3>Ashes Drama: England Stages Incredible Comeback to Level Series Against Australia</h3>
+                    <p>In one of the most thrilling matches in Ashes history, England fought back from certain defeat to secure a remarkable victory.</p>
+                    <div class="news-card-footer">
+                        <div class="news-card-author">
+                            <div class="author-avatar">DP</div>
+                            <span class="author-name">David Patel</span>
+                        </div>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- News Card 5 -->
+            <div class="news-card">
+                <div class="news-card-img">
+                    <img src="olympics.jpg" alt="Olympics News">
+                    <div class="news-card-badge">Olympics</div>
+                </div>
+                <div class="news-card-content">
+                    <span class="news-card-date">December 20, 2025</span>
+                    <h3>Paris 2024 Preparations in Final Stages as Olympic Flame Tour Begins</h3>
+                    <p>With one year to go, Paris organizers reveal stunning new venues and innovative plans for the 2024 Summer Olympics.</p>
+                    <div class="news-card-footer">
+                        <div class="news-card-author">
+                            <div class="author-avatar">EC</div>
+                            <span class="author-name">Emma Clark</span>
+                        </div>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- News Card 6 -->
+            <div class="news-card">
+                <div class="news-card-img">
+                    <img src="formula.jpg" alt="F1 News">
+                    <div class="news-card-badge">Formula 1</div>
+                </div>
+                <div class="news-card-content">
+                    <span class="news-card-date">October 10, 2025</span>
+                    <h3>Verstappen Dominates British GP While McLaren Surprises with Double Podium</h3>
+                    <p>Red Bull's Max Verstappen continued his dominant season with another victory, while McLaren emerged as surprise contenders.</p>
+                    <div class="news-card-footer">
+                        <div class="news-card-author">
+                            <div class="author-avatar">JL</div>
+                            <span class="author-name">James Lee</span>
+                        </div>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Particle animation
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = `rgba(${Math.random() * 100 + 155}, ${Math.random() * 50 + 50}, ${Math.random() * 50 + 50}, ${Math.random() * 0.5 + 0.2})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x > canvas.width || this.x < 0) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.speedY = -this.speedY;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            
+            requestAnimationFrame(animateParticles);
+        }
+
+        createParticles();
+        animateParticles();
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // Animate news cards on scroll
+            animateOnScroll();
+        });
+
+        // Button hover effects
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Animate news cards on scroll
+        function animateOnScroll() {
+            const newsCards = document.querySelectorAll('.news-card, .featured-news-card');
+            const windowHeight = window.innerHeight;
+            
+            newsCards.forEach(card => {
+                const position = card.getBoundingClientRect().top;
+                
+                if (position < windowHeight - 100) {
+                    card.classList.add('visible');
+                }
+            });
+        }
+
+        // Initial animation trigger
+        setTimeout(animateOnScroll, 500);
+
+        // Floating card animation
+        const floatingCards = document.querySelectorAll('.floating-card');
+        floatingCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.5}s`;
+        });
+    </script>
+</body>
+</html>

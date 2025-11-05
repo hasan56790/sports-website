@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameOn Fixtures - 2025-2026 Schedule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        :root {
+            --primary: #ff3a00;
+            --secondary: #0a1128;
+            --accent: #00e5ff;
+            --light: #ffffff;
+            --dark: #0d1117;
+            --gradient: linear-gradient(135deg, #ff3a00 0%, #00e5ff 100%);
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 58, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.1) 0%, transparent 20%);
+        }
+
+        /* Particle Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(13, 17, 23, 0.9);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid transparent;
+            background-image: linear-gradient(90deg, var(--dark), var(--secondary)), 
+                              var(--gradient);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            transition: all 0.4s ease;
+        }
+
+        header.scrolled {
+            padding: 0.5rem 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            animation: textGlow 2s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 58, 0, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(0, 229, 255, 0.8), 0 0 30px rgba(0, 229, 255, 0.6);
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 1.2rem;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-image: var(--gradient);
+            transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-image: var(--gradient);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-login:hover {
+            color: var(--dark);
+            border-color: transparent;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 194, 255, 0.4);
+        }
+
+        .btn-signup {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-signup:hover {
+            color: var(--dark);
+            border-color: transparent;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 58, 0, 0.4);
+        }
+
+        /* Fixtures Hero Section */
+        .fixtures-hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 10% 4rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .fixtures-hero-content {
+            width: 100%;
+            z-index: 1;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .fixtures-hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .fixtures-hero h1 span {
+            display: block;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            position: relative;
+        }
+
+        .fixtures-hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        /* Year Selector */
+        .year-selector {
+            padding: 2rem 10%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .year-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .year-btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: 2px solid transparent;
+        }
+
+        .year-btn.active {
+            background-image: var(--gradient);
+            color: var(--dark);
+            border-color: transparent;
+            box-shadow: 0 10px 20px rgba(255, 58, 0, 0.3);
+        }
+
+        .year-btn:hover:not(.active) {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        /* Month Navigation */
+        .month-navigation {
+            padding: 1rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .month-nav-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .month-nav-btn:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .month-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        /* Fixtures Section */
+        .fixtures {
+            padding: 3rem 10%;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding-left: 2rem;
+            border-left: 5px solid;
+            border-image: var(--gradient) 1;
+        }
+
+        .month-section {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .month-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .month-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .month-name {
+            font-size: 2rem;
+            font-weight: 800;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .month-year {
+            font-size: 1.5rem;
+            color: #ccc;
+            font-weight: 600;
+        }
+
+        .fixtures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .fixture-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .fixture-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fixture-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 58, 0, 0.3);
+        }
+
+        .fixture-header {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .fixture-date {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fixture-day {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .fixture-time {
+            font-weight: 600;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .fixture-tournament {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .fixture-content {
+            padding: 2rem;
+        }
+
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 40%;
+        }
+
+        .team-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .fixture-card:hover .team-logo {
+            transform: scale(1.2);
+        }
+
+        .team-name {
+            font-weight: 700;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .vs {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ccc;
+        }
+
+        .fixture-footer {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .fixture-venue {
+            font-weight: 600;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .fixture-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .fixture-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .fixture-action:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        /* Calendar View */
+        .calendar-view {
+            padding: 5rem 10%;
+            background: rgba(0, 0, 0, 0.3);
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .calendar-header {
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .calendar-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .calendar-day-header {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            padding: 1rem;
+            min-height: 100px;
+            background: rgba(13, 17, 23, 0.8);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .day-number {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .calendar-event {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+            background: var(--primary);
+            border-radius: 4px;
+            margin-top: 0.3rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .calendar-day.has-event {
+            background: rgba(255, 58, 0, 0.1);
+        }
+
+        .calendar-day.has-event:hover {
+            background: rgba(255, 58, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .fixtures-hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .fixtures-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .fixtures-hero {
+                padding: 7rem 5% 3rem;
+            }
+            
+            .fixtures-hero h1 {
+                font-size: 3rem;
+            }
+            
+            .fixtures, .calendar-view, .year-selector, .month-navigation {
+                padding: 3rem 5%;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+            
+            .calendar-day {
+                min-height: 80px;
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .fixtures-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .auth-buttons {
+                display: none;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .year-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .teams {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .team {
+                width: 100%;
+            }
+            
+            .calendar-day-header {
+                padding: 0.5rem;
+                font-size: 0.7rem;
+            }
+            
+            .calendar-day {
+                min-height: 60px;
+            }
+            
+            .day-number {
+                font-size: 0.8rem;
+            }
+            
+            .calendar-event {
+                display: none;
+            }
+            
+            .month-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <span class="logo-text">GameOn Fixtures</span>
+            </div>
+            <ul class="nav-links">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="live.html" class="nav-link active">Live Scores</a></li>
+                    <li class="nav-item"><a href="news.html" class="nav-link">News</a></li>
+                    <li class="nav-item"><a href="fixtures.html" class="nav-link">Fixtures</a></li>
+                    <li class="nav-item"><a href="team.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link">Shop</a></li>
+                    <li class="nav-item"><a href="https://gameon1.infy.uk" class="nav-link">Contact</a></li>
+                
+                
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn btn-login">Login</button>
+                <button class="btn btn-signup">Sign Up</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Fixtures Hero Section -->
+    <section class="fixtures-hero">
+        <div class="fixtures-hero-content">
+            <h1>2025-2026 <span>Match Fixtures</span></h1>
+            <p>Plan ahead with our complete schedule of upcoming matches. Never miss a game with our interactive calendar and reminder system.</p>
+        </div>
+    </section>
+
+    <!-- Year Selector -->
+    <section class="year-selector">
+        <h2 class="section-title">Select Year</h2>
+        <div class="year-buttons">
+            <button class="year-btn active" data-year="2025">2025</button>
+            <button class="year-btn" data-year="2026">2026</button>
+        </div>
+    </section>
+
+    <!-- Month Navigation -->
+    <section class="month-navigation">
+        <button class="month-nav-btn" id="prev-month">
+            <i class="fas fa-chevron-left"></i> Previous Month
+        </button>
+        <div class="month-display" id="current-month">January 2025</div>
+        <button class="month-nav-btn" id="next-month">
+            Next Month <i class="fas fa-chevron-right"></i>
+        </button>
+    </section>
+
+    <!-- Fixtures Section -->
+    <section class="fixtures">
+        <h2 class="section-title">Upcoming Matches</h2>
+        
+        <!-- January 2025 -->
+        <div class="month-section visible" data-month="january-2025">
+            <div class="month-header">
+                <h3 class="month-name">January</h3>
+                <span class="month-year">2025</span>
+            </div>
+            <div class="fixtures-grid">
+                <!-- Match 1 -->
+                <div class="fixture-card visible">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <span class="fixture-day">Saturday, 10 Jan</span>
+                            <span class="fixture-time">19:45 IST</span>
+                        </div>
+                        <div class="fixture-tournament">Premier League</div>
+                    </div>
+                    <div class="fixture-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-futbol"></i>
+                                </div>
+                                <div class="team-name">Manchester United</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-futbol"></i>
+                                </div>
+                                <div class="team-name">Liverpool</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="fixture-venue">Old Trafford, Manchester</div>
+                        <div class="fixture-actions">
+                            <button class="fixture-action">
+                                <i class="far fa-bell"></i>
+                            </button>
+                            <button class="fixture-action">
+                                <i class="far fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Match 2 -->
+                <div class="fixture-card visible">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <span class="fixture-day">Sunday, 18 Jan</span>
+                            <span class="fixture-time">16:30 IST</span>
+                        </div>
+                        <div class="fixture-tournament">NBA</div>
+                    </div>
+                    <div class="fixture-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-basketball-ball"></i>
+                                </div>
+                                <div class="team-name">Lakers</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-basketball-ball"></i>
+                                </div>
+                                <div class="team-name">Warriors</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="fixture-venue">Staples Center, Los Angeles</div>
+                        <div class="fixture-actions">
+                            <button class="fixture-action">
+                                <i class="far fa-bell"></i>
+                            </button>
+                            <button class="fixture-action">
+                                <i class="far fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- February 2025 -->
+        <div class="month-section" data-month="february-2025">
+            <div class="month-header">
+                <h3 class="month-name">February</h3>
+                <span class="month-year">2025</span>
+            </div>
+            <div class="fixtures-grid">
+                <!-- Match 1 -->
+                <div class="fixture-card">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <span class="fixture-day">Saturday, 8 Feb</span>
+                            <span class="fixture-time">15:00 IST</span>
+                        </div>
+                        <div class="fixture-tournament">Cricket World Cup</div>
+                    </div>
+                    <div class="fixture-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-baseball-ball"></i>
+                                </div>
+                                <div class="team-name">India</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-baseball-ball"></i>
+                                </div>
+                                <div class="team-name">Australia</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="fixture-venue">MCG, Melbourne</div>
+                        <div class="fixture-actions">
+                            <button class="fixture-action">
+                                <i class="far fa-bell"></i>
+                            </button>
+                            <button class="fixture-action">
+                                <i class="far fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Match 2 -->
+                <div class="fixture-card">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <span class="fixture-day">Sunday, 22 Feb</span>
+                            <span class="fixture-time">21:00 IST</span>
+                        </div>
+                        <div class="fixture-tournament">UEFA Champions League</div>
+                    </div>
+                    <div class="fixture-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-futbol"></i>
+                                </div>
+                                <div class="team-name">Barcelona</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-futbol"></i>
+                                </div>
+                                <div class="team-name">Bayern Munich</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="fixture-venue">Camp Nou, Barcelona</div>
+                        <div class="fixture-actions">
+                            <button class="fixture-action">
+                                <i class="far fa-bell"></i>
+                            </button>
+                            <button class="fixture-action">
+                                <i class="far fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- March 2025 -->
+        <div class="month-section" data-month="march-2025">
+            <div class="month-header">
+                <h3 class="month-name">March</h3>
+                <span class="month-year">2025</span>
+            </div>
+            <div class="fixtures-grid">
+                <!-- Match 1 -->
+                <div class="fixture-card">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <span class="fixture-day">Saturday, 15 Mar</span>
+                            <span class="fixture-time">14:30 IST</span>
+                        </div>
+                        <div class="fixture-tournament">IPL</div>
+                    </div>
+                    <div class="fixture-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-baseball-ball"></i>
+                                </div>
+                                <div class="team-name">Mumbai Indians</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-baseball-ball"></i>
+                                </div>
+                                <div class="team-name">Chennai Super Kings</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="fixture-venue">Wankhede Stadium, Mumbai</div>
+                        <div class="fixture-actions">
+                            <button class="fixture-action">
+                                <i class="far fa-bell"></i>
+                            </button>
+                            <button class="fixture-action">
+                                <i class="far fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- January 2026 -->
+        <div class="month-section" data-month="january-2026">
+            <div class="month-header">
+                <h3 class="month-name">January</h3>
+                <span class="month-year">2026</span>
+            </div>
+            <div class="fixtures-grid">
+                <!-- Match 1 -->
+                <div class="fixture-card">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <span class="fixture-day">Sunday, 11 Jan</span>
+                            <span class="fixture-time">18:00 IST</span>
+                        </div>
+                        <div class="fixture-tournament">Premier League</div>
+                    </div>
+                    <div class="fixture-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-futbol"></i>
+                                </div>
+                                <div class="team-name">Arsenal</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-futbol"></i>
+                                </div>
+                                <div class="team-name">Chelsea</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="fixture-venue">Emirates Stadium, London</div>
+                        <div class="fixture-actions">
+                            <button class="fixture-action">
+                                <i class="far fa-bell"></i>
+                            </button>
+                            <button class="fixture-action">
+                                <i class="far fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- February 2026 -->
+        <div class="month-section" data-month="february-2026">
+            <div class="month-header">
+                <h3 class="month-name">February</h3>
+                <span class="month-year">2026</span>
+            </div>
+            <div class="fixtures-grid">
+                <!-- Match 1 -->
+                <div class="fixture-card">
+                    <div class="fixture-header">
+                        <div class="fixture-date">
+                            <span class="fixture-day">Saturday, 7 Feb</span>
+                            <span class="fixture-time">20:00 IST</span>
+                        </div>
+                        <div class="fixture-tournament">NBA All-Star</div>
+                    </div>
+                    <div class="fixture-content">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-basketball-ball"></i>
+                                </div>
+                                <div class="team-name">Team LeBron</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">
+                                    <i class="fas fa-basketball-ball"></i>
+                                </div>
+                                <div class="team-name">Team Durant</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fixture-footer">
+                        <div class="fixture-venue">United Center, Chicago</div>
+                        <div class="fixture-actions">
+                            <button class="fixture-action">
+                                <i class="far fa-bell"></i>
+                            </button>
+                            <button class="fixture-action">
+                                <i class="far fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar View -->
+    <section class="calendar-view">
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <div class="calendar-title" id="calendar-month">January 2025</div>
+                <div class="calendar-nav">
+                    <button class="calendar-nav-btn" id="calendar-prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="calendar-nav-btn" id="calendar-next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">Sun</div>
+                <div class="calendar-day-header">Mon</div>
+                <div class="calendar-day-header">Tue</div>
+                <div class="calendar-day-header">Wed</div>
+                <div class="calendar-day-header">Thu</div>
+                <div class="calendar-day-header">Fri</div>
+                <div class="calendar-day-header">Sat</div>
+                
+                <!-- Calendar days will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Particle animation
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = `rgba(${Math.random() * 100 + 155}, ${Math.random() * 50 + 50}, ${Math.random() * 50 + 50}, ${Math.random() * 0.5 + 0.2})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x > canvas.width || this.x < 0) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.speedY = -this.speedY;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            
+            requestAnimationFrame(animateParticles);
+        }
+
+        createParticles();
+        animateParticles();
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            // Animate elements on scroll
+            animateOnScroll();
+        });
+
+        // Month navigation functionality
+        const monthSections = document.querySelectorAll('.month-section');
+        const monthDisplay = document.getElementById('current-month');
+        const prevMonthBtn = document.getElementById('prev-month');
+        const nextMonthBtn = document.getElementById('next-month');
+        const calendarMonthDisplay = document.getElementById('calendar-month');
+        const calendarPrevBtn = document.getElementById('calendar-prev');
+        const calendarNextBtn = document.getElementById('calendar-next');
+        
+        let currentMonthIndex = 0;
+        const months = [
+            'january-2025', 'february-2025', 'march-2025', 
+            'january-2026', 'february-2026'
+        ];
+        
+        const monthNames = [
+            'January 2025', 'February 2025', 'March 2025',
+            'January 2026', 'February 2026'
+        ];
+        
+        function showMonth(index) {
+            // Hide all months
+            monthSections.forEach(section => {
+                section.classList.remove('visible');
+            });
+            
+            // Show selected month
+            monthSections[index].classList.add('visible');
+            
+            // Update month display
+            monthDisplay.textContent = monthNames[index];
+            calendarMonthDisplay.textContent = monthNames[index];
+            
+            // Update calendar
+            updateCalendar(index);
+            
+            // Scroll to top of fixtures section
+            document.querySelector('.fixtures').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Next month button
+        nextMonthBtn.addEventListener('click', function() {
+            if (currentMonthIndex < months.length - 1) {
+                currentMonthIndex++;
+                showMonth(currentMonthIndex);
+            }
+        });
+        
+        // Previous month button
+        prevMonthBtn.addEventListener('click', function() {
+            if (currentMonthIndex > 0) {
+                currentMonthIndex--;
+                showMonth(currentMonthIndex);
+            }
+        });
+        
+        // Calendar navigation
+        calendarNextBtn.addEventListener('click', function() {
+            if (currentMonthIndex < months.length - 1) {
+                currentMonthIndex++;
+                showMonth(currentMonthIndex);
+            }
+        });
+        
+        calendarPrevBtn.addEventListener('click', function() {
+            if (currentMonthIndex > 0) {
+                currentMonthIndex--;
+                showMonth(currentMonthIndex);
+            }
+        });
+        
+        // Year selector functionality
+        const yearButtons = document.querySelectorAll('.year-btn');
+        yearButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                yearButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                const year = this.getAttribute('data-year');
+                
+                // Filter to show only selected year
+                if (year === '2025') {
+                    // Show 2025 months
+                    monthSections.forEach(section => {
+                        if (section.getAttribute('data-month').includes('2025')) {
+                            section.style.display = 'block';
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
+                    // Set to first month of 2025
+                    currentMonthIndex = 0;
+                    showMonth(currentMonthIndex);
+                } else {
+                    // Show 2026 months
+                    monthSections.forEach(section => {
+                        if (section.getAttribute('data-month').includes('2026')) {
+                            section.style.display = 'block';
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
+                    // Set to first month of 2026
+                    currentMonthIndex = 3;
+                    showMonth(currentMonthIndex);
+                }
+                
+                // Animation effect
+                document.querySelector('.fixtures-hero h1').style.animation = 'none';
+                setTimeout(() => {
+                    document.querySelector('.fixtures-hero h1').style.animation = 'fadeInUp 1.2s ease-out';
+                }, 10);
+            });
+        });
+
+        // Fixture action buttons
+        const fixtureActions = document.querySelectorAll('.fixture-action');
+        fixtureActions.forEach(action => {
+            action.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-check"></i>';
+                this.style.background = '#00cc00';
+                
+                setTimeout(() => {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bell')) {
+                        this.innerHTML = '<i class="far fa-bell"></i>';
+                    } else {
+                        this.innerHTML = '<i class="far fa-calendar-plus"></i>';
+                    }
+                    this.style.background = '';
+                }, 2000);
+            });
+        });
+
+        // Calendar generation
+        function updateCalendar(monthIndex) {
+            const calendarGrid = document.querySelector('.calendar-grid');
+            // Clear existing days (keep headers)
+            while (calendarGrid.children.length > 7) {
+                calendarGrid.removeChild(calendarGrid.lastChild);
+            }
+            
+            // Add days based on month index
+            const daysInMonth = [31, 28, 31, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            let daysToAdd = daysInMonth[monthIndex % 12];
+            
+            // Add empty days for the first of the month
+            const startDay = (monthIndex * 3) % 7; // Simple calculation for demo
+            
+            for (let i = 0; i < startDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add the days of the month
+            for (let i = 1; i <= daysToAdd; i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day';
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = i;
+                day.appendChild(dayNumber);
+                
+                // Add events on certain days
+                if ((monthIndex === 0 && i === 10) || (monthIndex === 0 && i === 18) || 
+                    (monthIndex === 1 && i === 8) || (monthIndex === 1 && i === 22) ||
+                    (monthIndex === 3 && i === 11) || (monthIndex === 4 && i === 7)) {
+                    day.classList.add('has-event');
+                    
+                    const event = document.createElement('div');
+                    event.className = 'calendar-event';
+                    event.textContent = 'Match Day';
+                    day.appendChild(event);
+                }
+                
+                calendarGrid.appendChild(day);
+            }
+        }
+
+        // Initialize calendar
+        updateCalendar(0);
+
+        // Animate elements on scroll
+        function animateOnScroll() {
+            const sections = document.querySelectorAll('.month-section, .fixture-card');
+            const windowHeight = window.innerHeight;
+            
+            sections.forEach(section => {
+                const position = section.getBoundingClientRect().top;
+                
+                if (position < windowHeight - 100) {
+                    section.classList.add('visible');
+                }
+            });
+        }
+
+        // Initial animation trigger
+        setTimeout(animateOnScroll, 500);
+    </script>
+</body>
+</html>

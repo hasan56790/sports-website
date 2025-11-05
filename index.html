@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameOn - Ultimate Sports Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        :root {
+            --primary: #ff3a00;
+            --secondary: #0a1128;
+            --accent: #00e5ff;
+            --light: #ffffff;
+            --dark: #0d1117;
+            --gradient: linear-gradient(135deg, #ff3a00 0%, #00e5ff 100%);
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 58, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.1) 0%, transparent 20%);
+        }
+
+        /* Particle Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: rgba(13, 17, 23, 0.9);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid transparent;
+            background-image: linear-gradient(90deg, var(--dark), var(--secondary)), 
+                              var(--gradient);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            transition: all 0.4s ease;
+        }
+
+        header.scrolled {
+            padding: 0.5rem 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            animation: textGlow 2s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 58, 0, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(0, 229, 255, 0.8), 0 0 30px rgba(0, 229, 255, 0.6);
+            }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 1.2rem;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-image: var(--gradient);
+            transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-image: var(--gradient);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-login:hover {
+            color: var(--dark);
+            border-color: transparent;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 194, 255, 0.4);
+        }
+
+        .btn-signup {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-signup:hover {
+            color: var(--dark);
+            border-color: transparent;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 58, 0, 0.4);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .hamburger .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--light);
+            margin: 3px 0;
+            border-radius: 2px;
+            transition: 0.4s;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100vh;
+            background: rgba(13, 17, 23, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: right 0.5s ease;
+            padding: 2rem;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            text-align: center;
+            width: 100%;
+        }
+
+        .mobile-nav-links li {
+            margin: 2rem 0;
+        }
+
+        .mobile-nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+            display: block;
+            padding: 0.5rem;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--light);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-auth {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .mobile-auth .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1500;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            flex: 1;
+            z-index: 1;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            position: relative;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .btn-explore {
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            background-image: var(--gradient);
+            color: var(--dark);
+            font-weight: 700;
+            border: none;
+        }
+
+        .btn-explore:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 58, 0, 0.5);
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .floating-card {
+            position: absolute;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            animation: float 6s ease-in-out infinite;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .floating-card:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            z-index: 2;
+        }
+
+        .card-1 {
+            width: 280px;
+            height: 380px;
+            top: 50px;
+            left: 50px;
+            animation-delay: 0s;
+            background: linear-gradient(145deg, rgba(255, 58, 0, 0.2), rgba(255, 58, 0, 0.05));
+        }
+
+        .card-2 {
+            width: 300px;
+            height: 400px;
+            top: 100px;
+            right: 50px;
+            animation-delay: 1s;
+            background: linear-gradient(145deg, rgba(0, 229, 255, 0.2), rgba(0, 229, 255, 0.05));
+        }
+
+        .card-3 {
+            width: 250px;
+            height: 350px;
+            bottom: 80px;
+            left: 150px;
+            animation-delay: 2s;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+        }
+
+        .card-content {
+            padding: 30px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100%;
+            text-align: center;
+        }
+
+        .card-content i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .card-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Featured Section */
+        .featured {
+            padding: 8rem 10%;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            display: inline-block;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 5px;
+            background-image: var(--gradient);
+            border-radius: 10px;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(255, 58, 0, 0.3);
+        }
+
+        .card-img {
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-img i {
+            position: relative;
+            z-index: 1;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .card-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 58, 0, 0.2), rgba(0, 229, 255, 0.2));
+            opacity: 0.5;
+        }
+
+        .card-content {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .card p {
+            color: #ccc;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        /* Footer Section */
+        footer {
+            background: linear-gradient(to bottom, rgba(13, 17, 23, 0.9), rgba(10, 17, 40, 0.95));
+            padding: 4rem 2rem 2rem;
+            margin-top: auto;
+            border-top: 2px solid transparent;
+            background-image: linear-gradient(90deg, var(--dark), var(--secondary)), 
+                              var(--gradient);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: transparent;
+            background-image: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-transform: uppercase;
+            font-weight: 800;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-image: var(--gradient);
+            border-radius: 3px;
+        }
+
+        .footer-column p {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .footer-links i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: var(--gradient);
+            top: 0;
+            left: -100%;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: -1;
+        }
+
+        .social-icon:hover::before {
+            left: 0;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px) rotate(10deg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px 0 0 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+        }
+
+        .newsletter-input::placeholder {
+            color: #ccc;
+        }
+
+        .newsletter-btn {
+            padding: 0 20px;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            background-image: var(--gradient);
+            color: var(--dark);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-btn:hover {
+            background: var(--primary);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(255, 58, 0, 0.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-25px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+        }
+
+        /* Particle animation */
+        @keyframes particleAnimation {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh * var(--random))) translateX(calc(100vw * var(--random))) rotate(calc(360deg * var(--random)));
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .floating-card {
+                transform: scale(0.9);
+            }
+            
+            .floating-card:hover {
+                transform: scale(1) rotate(5deg);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero {
+                flex-direction: column;
+                padding-top: 120px;
+                text-align: center;
+            }
+            
+            .hero-content {
+                margin-bottom: 4rem;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-image {
+                width: 100%;
+                height: 400px;
+                margin-top: 2rem;
+            }
+            
+            .floating-card {
+                position: relative;
+                margin: 1rem;
+            }
+            
+            .nav-links, .auth-buttons {
+                display: none;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .featured {
+                padding: 5rem 5%;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .card {
+                width: 100%;
+                max-width: 350px;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .newsletter-input, .newsletter-btn {
+                border-radius: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <span class="logo-text">GameOn</span>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="live.html" class="nav-link active">Live Scores</a></li>
+                <li class="nav-item"><a href="news.html" class="nav-link">News</a></li>
+                <li class="nav-item"><a href="fixtures.html" class="nav-link">Fixtures</a></li>
+                <li class="nav-item"><a href="team.html" class="nav-link">Teams</a></li>
+                <li class="nav-item"><a href="shop.html" class="nav-link">Shop</a></li>
+                <li class="nav-item"><a href="https://gameon1.infy.uk" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <div class="auth-buttons">
+                <button class="btn btn-login">Login</button>
+                <button class="btn btn-signup">Sign Up</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-nav" id="mobile-nav">
+        <button class="close-menu" id="close-menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="live.html">Live Scores</a></li>
+            <li><a href="news.html">News</a></li>
+            <li><a href="fixtures.html">Fixtures</a></li>
+            <li><a href="team.html">Teams</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="https://gameon1.infy.uk">Contact</a></li>
+        </ul>
+        <div class="mobile-auth">
+            <button class="btn btn-login">Login</button>
+            <button class="btn btn-signup">Sign Up</button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Experience Sports <span>Like Never Before</span></h1>
+            <p>Get real-time updates, expert analysis, and exclusive content for all your favorite sports. Join the community of passionate sports fans today!</p>
+            <div class="hero-buttons">
+                <button class="btn btn-explore">Explore Now</button>
+                <button class="btn btn-login">Watch Live</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="floating-card card-1">
+                <div class="card-content">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Champions League</h3>
+                    <p>Follow the biggest tournament in football</p>
+                </div>
+            </div>
+            <div class="floating-card card-2">
+                <div class="card-content">
+                    <i class="fas fa-basketball-ball"></i>
+                    <h3>NBA Finals</h3>
+                    <p>Watch the best basketball action</p>
+                </div>
+            </div>
+            <div class="floating-card card-3">
+                <div class="card-content">
+                    <i class="fas fa-running"></i>
+                    <h3>Olympics 2026</h3>
+                    <p>Coming soon to Paris</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Section -->
+    <section class="featured">
+        <h2 class="section-title">Featured Sports</h2>
+        <div class="cards">
+            <div class="card">
+                <div class="card-img">
+                    <i class="fas fa-futbol"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Football</h3>
+                    <p>Follow top leagues like Premier League, La Liga, Serie A, and more with live updates and expert analysis.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <i class="fas fa-basketball-ball"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Basketball</h3>
+                    <p>NBA, EuroLeague, and other basketball leagues with player stats and game highlights.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">
+                    <i class="fas fa-hockey-puck"></i>
+                </div>
+                <div class="card-content">
+                    <h3>Hockey</h3>
+                    <p>NHL and international hockey events with live commentary and match predictions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>GameOn</h3>
+                <p>Your ultimate destination for all things sports. Live scores, news, stats, and more for the passionate sports fan.</p>
+                <div class="social-links">
+                    <a href="" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://x.com/MuhammadHa58951?t=5huSoGrgmc_LoZTXdGm7Pw&s=09" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/one_ummah05?igsh=MW93cXdudDN6c21yeg==" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Live Scores</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Fixtures</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> News</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Teams</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Players</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Sports</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Football</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Basketball</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Hockey</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Tennis</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Cricket</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Baseball</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest updates and exclusive content.</p>
+                <div class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="Your Email">
+                    <button class="newsletter-btn">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 GameOn. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--primary);"></i> for sports fans</p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact Us</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Particle animation
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = `rgba(${Math.random() * 100 + 155}, ${Math.random() * 50 + 50}, ${Math.random() * 50 + 50}, ${Math.random() * 0.5 + 0.2})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x > canvas.width || this.x < 0) {
+                    this.speedX = -this.speedX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.speedY = -this.speedY;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            
+            requestAnimationFrame(animateParticles);
+        }
+
+        createParticles();
+        animateParticles();
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Button hover effects
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Card hover effects with delay
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.1}s`;
+        });
+
+        // Floating card animation
+        const floatingCards = document.querySelectorAll('.floating-card');
+        floatingCards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.5}s`;
+        });
+
+        // Mobile menu functionality
+        const hamburger = document.querySelector('.hamburger');
+        const mobileNav = document.getElementById('mobile-nav');
+        const closeMenu = document.getElementById('close-menu');
+        const overlay = document.getElementById('overlay');
+
+        hamburger.addEventListener('click', function() {
+            mobileNav.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeMobileMenu() {
+            mobileNav.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        closeMenu.addEventListener('click', closeMobileMenu);
+        overlay.addEventListener('click', closeMobileMenu);
+
+        // Close menu when clicking on links
+        const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+    </script>
+</body>
+</html>

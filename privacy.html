@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameOn - Privacy Policy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #0f172a;
+            --accent: #3b82f6;
+            --light: #ffffff;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light-gray: #f1f5f9;
+            --border: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--secondary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--light);
+            letter-spacing: 0.5px;
+        }
+
+        .logo-dot {
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Security Animation */
+        .security-animation {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shield-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+        }
+
+        .shield {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        .shield i {
+            font-size: 4rem;
+            color: white;
+        }
+
+        .shield-ring {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: ripple 3s infinite linear;
+        }
+
+        .shield-ring:nth-child(2) {
+            width: 130%;
+            height: 130%;
+            top: -15%;
+            left: -15%;
+            animation-delay: 0.5s;
+        }
+
+        .shield-ring:nth-child(3) {
+            width: 160%;
+            height: 160%;
+            top: -30%;
+            left: -30%;
+            animation-delay: 1s;
+        }
+
+        .security-text {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .security-text h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .security-text p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Policy Content */
+        .policy-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .policy-section {
+            margin-bottom: 3rem;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .policy-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .policy-section h2 {
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .policy-section h2 i {
+            font-size: 1.2rem;
+            background: var(--light-gray);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .policy-section p {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .policy-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .policy-section li {
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+
+        .highlight {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Security Features */
+        .security-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .security-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .security-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .security-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            background: var(--light-gray);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+        }
+
+        .security-card h3 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: var(--light);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .security-text h1 {
+                font-size: 2.2rem;
+            }
+            
+            .security-text p {
+                font-size: 1rem;
+            }
+            
+            .policy-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .policy-section {
+                padding: 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .security-features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <span class="logo-text">GameOn<span class="logo-dot">.</span></span>
+            </div>
+            <ul class="nav-links">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="live.html" class="nav-link active">Live Scores</a></li>
+                    <li class="nav-item"><a href="news.html" class="nav-link">News</a></li>
+                    <li class="nav-item"><a href="fixtures.html" class="nav-link">Fixtures</a></li>
+                    <li class="nav-item"><a href="team.html" class="nav-link">Teams</a></li>
+                    <li class="nav-item"><a href="shop.html" class="nav-link">Shop</a></li>
+                    <li class="nav-item"><a href="https://gameon1.infy.uk" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Security Animation Section -->
+    <section class="security-animation">
+        <div class="shield-container">
+            <div class="shield">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="shield-ring"></div>
+            <div class="shield-ring"></div>
+        </div>
+        <div class="security-text">
+            <h1>Your Privacy Matters</h1>
+            <p>At GameOn, we are committed to protecting your personal information and your right to privacy.</p>
+        </div>
+    </section>
+
+    <!-- Policy Content -->
+    <div class="policy-container">
+        <div class="last-updated">Last Updated: September 17, 2025</div>
+        
+        <div class="security-features">
+            <div class="security-card fade-in">
+                <i class="fas fa-lock"></i>
+                <h3>Data Encryption</h3>
+                <p>All your data is encrypted using industry-standard protocols to ensure maximum security.</p>
+            </div>
+            <div class="security-card fade-in">
+                <i class="fas fa-user-shield"></i>
+                <h3>Privacy First</h3>
+                <p>We follow privacy-by-design principles in all our products and services.</p>
+            </div>
+            <div class="security-card fade-in">
+                <i class="fas fa-database"></i>
+                <h3>Secure Storage</h3>
+                <p>Your information is stored on secure servers with multiple layers of protection.</p>
+            </div>
+        </div>
+        
+        <div class="policy-section fade-in">
+            <h2><i class="fas fa-info-circle"></i> Introduction</h2>
+            <p>Welcome to GameOn's Privacy Policy. This policy describes how we collect, use, and share your personal information when you use our website, applications, and services.</p>
+            <p>By using GameOn, you agree to the collection and use of information in accordance with this policy.</p>
+        </div>
+        
+        <div class="policy-section fade-in">
+            <h2><i class="fas fa-database"></i> Information We Collect</h2>
+            <p>We collect several different types of information for various purposes to provide and improve our service to you.</p>
+            
+            <h3>Personal Data</h3>
+            <p>While using our service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you:</p>
+            <ul>
+                <li>Email address</li>
+                <li>First name and last name</li>
+                <li>Phone number</li>
+                <li>Address, State, Province, ZIP/Postal code, City</li>
+                <li>Cookies and Usage Data</li>
+            </ul>
+            
+            <h3>Usage Data</h3>
+            <p>We may also collect information on how the service is accessed and used:</p>
+            <ul>
+                <li>IP address</li>
+                <li>Browser type and version</li>
+                <li>Pages visited on our service</li>
+                <li>Time and date of visit</li>
+                <li>Time spent on those pages</li>
+                <li>Other diagnostic data</li>
+            </ul>
+        </div>
+        
+        <div class="policy-section fade-in">
+            <h2><i class="fas fa-cookie"></i> Use of Cookies</h2>
+            <p>We use cookies and similar tracking technologies to track activity on our service and hold certain information.</p>
+            <p>Cookies are files with a small amount of data which may include an anonymous unique identifier. They are sent to your browser from a website and stored on your device.</p>
+            
+            <div class="highlight">
+                <p>You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our service.</p>
+            </div>
+        </div>
+        
+        <div class="policy-section fade-in">
+            <h2><i class="fas fa-lock"></i> Data Security</h2>
+            <p>The security of your data is important to us. We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
+            <p>However, remember that no method of transmission over the Internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.</p>
+        </div>
+        
+        <div class="policy-section fade-in">
+            <h2><i class="fas fa-share-alt"></i> Data Sharing</h2>
+            <p>We may share your personal information with:</p>
+            <ul>
+                <li><strong>Service Providers:</strong> To facilitate our service, provide the service on our behalf, or perform service-related activities.</li>
+                <li><strong>Business Transfers:</strong> In connection with any merger, sale of company assets, financing, or acquisition of all or a portion of our business.</li>
+                <li><strong>Legal Requirements:</strong> When required to do so by law or in response to valid requests by public authorities.</li>
+            </ul>
+        </div>
+        
+        <div class="policy-section fade-in">
+            <h2><i class="fas fa-user-check"></i> Your Rights</h2>
+            <p>Depending on your location, you may have the following rights regarding your personal information:</p>
+            <ul>
+                <li>The right to access and receive a copy of your personal information</li>
+                <li>The right to rectify any inaccurate or incomplete personal information</li>
+                <li>The right to request erasure of your personal information</li>
+                <li>The right to restrict or object to our processing of your personal information</li>
+                <li>The right to data portability</li>
+                <li>The right to withdraw consent at any time</li>
+            </ul>
+        </div>
+        
+        <div class="policy-section fade-in">
+            <h2><i class="fas fa-child"></i> Children's Privacy</h2>
+            <p>Our service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p>
+            <p>If you are a parent or guardian and you are aware that your child has provided us with personal data, please contact us. If we become aware that we have collected personal data from children without verification of parental consent, we take steps to remove that information from our servers.</p>
+        </div>
+        
+        <div class="policy-section fade-in">
+            <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy, please contact us:</p>
+            <ul>
+                <li>By email: gameon@gmail.com</li>
+                <li>By visiting our website: www.gameon.in/contact</li>
+                <li>By mail: GameOn., Shiv Katra, UttarPradesh </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Home</a>
+                <a href="#">About Us</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="copyright">
+                &copy; 2025 GameOn. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fade in elements on scroll
+        function checkFade() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', checkFade);
+        window.addEventListener('load', checkFade);
+    </script>
+</body>
+</html>
